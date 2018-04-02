@@ -11,18 +11,15 @@ import android.widget.TextView;
 import com.example.jplo.cinema.R;
 import com.example.jplo.cinema.model.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MoviesViewHolder>{
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>{
 
-    List<Movie> movies;
-
-    MoviesAdaptor(List<Movie> movies){
-        this.movies = movies;
-    }
+    private List<Movie> movies = new ArrayList<>();
 
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,9 +31,10 @@ public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MoviesView
 
     @Override
     public void onBindViewHolder(MoviesViewHolder holder, int position) {
-        holder.movieName.setText(movies.get(position).getName());
+        Movie movie = movies.get(position);
+        holder.movieName.setText(movie.getName());
         GlideApp.with(holder.itemView)
-                .load(movies.get(position).getUrl())
+                .load(movie.getUrl())
                 .override(600,200)
                 .into(holder.moviePhoto);
     }
@@ -44,6 +42,11 @@ public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MoviesView
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    public void setMovies(List<Movie> movies){
+        this.movies = movies;
+        notifyDataSetChanged();
     }
 
     public static class MoviesViewHolder extends RecyclerView.ViewHolder {
