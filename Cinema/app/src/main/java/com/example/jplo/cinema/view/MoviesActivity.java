@@ -6,6 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.jplo.cinema.R;
+import com.example.jplo.cinema.component.DaggerMovieComponent;
+import com.example.jplo.cinema.component.MovieComponent;
 import com.example.jplo.cinema.model.Movie;
 import com.example.jplo.cinema.service.MovieService;
 
@@ -28,19 +30,16 @@ public class MoviesActivity extends AppCompatActivity {
 
     private List<Movie> movies = new ArrayList<>();
 
+    MovieService movieService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
         ButterKnife.bind(this);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://desafio-mobile-pitang.herokuapp.com/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MovieService movieService = retrofit.create(MovieService.class);
+        
+        MovieComponent movieComponent = DaggerMovieComponent.builder().build();
+        movieService = movieComponent.getMovieService();
         Observable<List<Movie>> moviesObservable = movieService.getMovies(0, 20);
 
         MoviesAdaptor moviesAdaptor = new MoviesAdaptor(movies);
