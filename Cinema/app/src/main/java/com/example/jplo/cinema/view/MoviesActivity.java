@@ -1,9 +1,12 @@
 package com.example.jplo.cinema.view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.jplo.cinema.R;
 import com.example.jplo.cinema.adapter.MoviesAdapter;
@@ -71,5 +74,12 @@ public class MoviesActivity extends AppCompatActivity {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
+    }
+
+    public void movieDetail(View view){
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        String id = view.getTag().toString();
+        intent.putExtra("key", id);
+        startActivity(intent);
     }
 }

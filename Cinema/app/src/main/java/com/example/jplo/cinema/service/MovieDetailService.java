@@ -7,6 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface MovieDetailService {
-    @GET("movies/detail{id}")
-    Observable<MovieDetail> getMovieDetail(@Path("id") int id);
+    @GET("movies/detail/{id}")
+    Observable<MovieDetail> getMovieDetail(@Path("id") String id);
 }

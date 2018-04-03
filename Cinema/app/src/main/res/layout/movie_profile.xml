@@ -6,34 +6,35 @@
     >
 
     <android.support.v7.widget.CardView
+        android:id="@+id/movie_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/movie_card_view"
-        >
+        android:onClick="movieDetail">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            >
+            android:padding="16dp">
 
             <ImageView
+                android:id="@+id/movie_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/movie_photo"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
-                />
+                android:layout_marginEnd="16dp"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@+id/movie_name" />
 
             <TextView
+                android:id="@+id/movie_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/movie_name"
-                android:layout_toRightOf="@+id/movie_photo"
                 android:layout_alignParentTop="true"
-                android:textSize="20sp"
-                />
+                android:layout_toRightOf="@+id/movie_photo"
+                android:layout_toEndOf="@+id/movie_photo"
+                android:textSize="20sp" />
 
         </RelativeLayout>
 

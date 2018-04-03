@@ -33,6 +33,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     @Override
     public void onBindViewHolder(MoviesViewHolder holder, int position) {
         Movie movie = movies.get(position);
+        holder.cardView.setTag(movie.getId());
         holder.movieName.setText(movie.getName());
         GlideApp.with(holder.itemView)
                 .load(movie.getUrl())
