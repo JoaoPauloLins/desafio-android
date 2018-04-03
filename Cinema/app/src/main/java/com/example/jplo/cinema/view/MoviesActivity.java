@@ -34,26 +34,42 @@ public class MoviesActivity extends AppCompatActivity {
     @Inject
     MoviesAdapter moviesAdapter;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+    private MoviesActivityComponent moviesActivityComponent;
+    private Observable<List<Movie>> moviesObservable;
+    private LinearLayoutManager linearLayoutManager;
+    private int page = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
         ButterKnife.bind(this);
 
-        MoviesActivityComponent moviesActivityComponent = DaggerMoviesActivityComponent.builder()
+        moviesActivityComponent = DaggerMoviesActivityComponent.builder()
                 .moviesActivityModule(new MoviesActivityModule(this))
                 .movieComponent(MovieApplication.get(this).getMovieComponent())
                 .build();
         moviesActivityComponent.injectMovieActivity(this);
 
-        Observable<List<Movie>> moviesObservable = movieService.getMovies(0, 20);
+        moviesObservable = movieService.getMovies(page, 3);
         moviesObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mo -> moviesAdapter.setMovies(mo));
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(moviesAdapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                moviesObservable = movieService.getMovies(page+1, 3);
+                moviesObservable.subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mo -> moviesAdapter.addMovies(mo));
+            }
+        };
+        recyclerView.addOnScrollListener(scrollListener);
     }
 }

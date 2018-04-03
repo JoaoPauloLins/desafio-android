@@ -49,7 +49,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         notifyDataSetChanged();
     }
 
-    public static class MoviesViewHolder extends RecyclerView.ViewHolder {
+    public void addMovies(List<Movie> moreMovies){
+        movies.addAll(moreMovies);
+        notifyDataSetChanged();
+    }
+
+    public class MoviesViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.movie_card_view)
         CardView cardView;
         @BindView(R.id.movie_name)
