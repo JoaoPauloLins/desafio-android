@@ -1,7 +1,8 @@
-package com.example.jplo.cinema.view;
+package com.example.jplo.cinema.component;
 
-import com.example.jplo.cinema.component.MovieComponent;
-import com.example.jplo.cinema.service.MovieService;
+import com.example.jplo.cinema.view.MoviesActivity;
+import com.example.jplo.cinema.module.MoviesActivityModule;
+import com.example.jplo.cinema.scope.MoviesActivityScope;
 
 import dagger.Component;
 

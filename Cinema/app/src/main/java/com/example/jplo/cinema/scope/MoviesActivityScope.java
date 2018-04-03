@@ -1,4 +1,4 @@
-package com.example.jplo.cinema.view;
+package com.example.jplo.cinema.scope;
 
 import javax.inject.Scope;
 

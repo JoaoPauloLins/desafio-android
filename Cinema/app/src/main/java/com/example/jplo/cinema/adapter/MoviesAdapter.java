@@ -1,4 +1,4 @@
-package com.example.jplo.cinema.view;
+package com.example.jplo.cinema.adapter;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.jplo.cinema.R;
 import com.example.jplo.cinema.model.Movie;
+import com.example.jplo.cinema.module.GlideApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     }
 
     public void addMovies(List<Movie> moreMovies){
+        int position = movies.size();
         movies.addAll(moreMovies);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(position, moreMovies.size());
     }
 
     public class MoviesViewHolder extends RecyclerView.ViewHolder {

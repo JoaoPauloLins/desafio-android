@@ -6,13 +6,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.jplo.cinema.R;
+import com.example.jplo.cinema.adapter.MoviesAdapter;
 import com.example.jplo.cinema.application.MovieApplication;
-import com.example.jplo.cinema.component.DaggerMovieComponent;
-import com.example.jplo.cinema.component.MovieComponent;
+import com.example.jplo.cinema.component.DaggerMoviesActivityComponent;
+import com.example.jplo.cinema.component.MoviesActivityComponent;
 import com.example.jplo.cinema.model.Movie;
+import com.example.jplo.cinema.module.MoviesActivityModule;
 import com.example.jplo.cinema.service.MovieService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,7 +39,6 @@ public class MoviesActivity extends AppCompatActivity {
     private MoviesActivityComponent moviesActivityComponent;
     private Observable<List<Movie>> moviesObservable;
     private LinearLayoutManager linearLayoutManager;
-    private int page = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class MoviesActivity extends AppCompatActivity {
                 .build();
         moviesActivityComponent.injectMovieActivity(this);
 
-        moviesObservable = movieService.getMovies(page, 3);
+        moviesObservable = movieService.getMovies(0, 3);
         moviesObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mo -> moviesAdapter.setMovies(mo));
@@ -64,7 +64,7 @@ public class MoviesActivity extends AppCompatActivity {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                moviesObservable = movieService.getMovies(page+1, 3);
+                moviesObservable = movieService.getMovies(page, 3);
                 moviesObservable.subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(mo -> moviesAdapter.addMovies(mo));
