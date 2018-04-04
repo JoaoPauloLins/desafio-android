@@ -64,7 +64,7 @@ public class MoviesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(moviesAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager, 0, 3) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 moviesObservable = movieService.getMovies(page, 3);
