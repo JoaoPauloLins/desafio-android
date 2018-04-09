@@ -30,11 +30,16 @@ public class MoviesPresenterImpl implements MoviesPresenter {
 
     @Override
     public void loadMovies(int page) {
-        int size = 3;
+        int size = 4;
         Observable<List<Movie>> moviesObservable = moviesInteractor.getMovies(page, size);
+        moviesView.addLoad();
         moviesObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(movies -> moviesView.addMovies(movies));
+                .subscribe(movies -> {
+                    moviesView.removeLoad();
+                    moviesView.addMovies(movies);
+                    moviesView.finishLoad();
+                });
     }
 
     @Override

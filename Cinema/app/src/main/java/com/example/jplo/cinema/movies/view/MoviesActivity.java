@@ -1,5 +1,6 @@
 package com.example.jplo.cinema.movies.view;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,9 +45,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(moviesAdapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager, 0, 3) {
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+            public void onLoadMore(int page) {
                 moviesPresenter.loadMovies(page);
             }
         };
@@ -55,12 +56,28 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         moviesPresenter.loadMovies(0);
     }
 
-    public void movieDetail(View view){
-        moviesPresenter.showMovieDetail(this, view);
-    }
-
     @Override
     public void addMovies(List<Movie> movies) {
         moviesAdapter.addMovies(movies);
+    }
+
+    @Override
+    public void addLoad(){
+        moviesAdapter.addLoad();
+    }
+
+    @Override
+    public void removeLoad(){
+        moviesAdapter.removeLoad();
+    }
+
+    @Override
+    public void finishLoad(){
+        scrollListener.setLoaded();
+    }
+
+    @Override
+    public void movieDetail(View view){
+        moviesPresenter.showMovieDetail(this, view);
     }
 }
