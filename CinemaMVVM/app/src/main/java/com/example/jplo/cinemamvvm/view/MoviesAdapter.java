@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 public class MoviesAdapter extends RecyclerView.Adapter{
 
     private List<Movie> movies = new ArrayList<>();
-    private int position = movies.size();
 
     private static final int VIEW_MOVIE = 1;
     private static final int VIEW_LOAD = 0;
@@ -33,8 +32,9 @@ public class MoviesAdapter extends RecyclerView.Adapter{
         return movies.get(position) != null ? VIEW_MOVIE : VIEW_LOAD;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         RecyclerView.ViewHolder viewHolder;
         View view;
@@ -54,7 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter{
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof MoviesViewHolder) {
             MoviesViewHolder moviesViewHolder = (MoviesViewHolder) holder;
@@ -86,8 +86,8 @@ public class MoviesAdapter extends RecyclerView.Adapter{
     }
 
     public void addLoad(){
-        position = movies.size();
-        if(position == 0 || movies.get(position-1) != null){
+        int position = movies.size();
+        if(position == 0 || movies.get(position -1) != null){
             movies.add(null);
             notifyItemRangeInserted(position, 1);
         }

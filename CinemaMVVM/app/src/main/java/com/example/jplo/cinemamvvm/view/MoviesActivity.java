@@ -79,6 +79,4 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         intent.putExtra("key", id);
         startActivity(intent);
     }
-
-
 }
