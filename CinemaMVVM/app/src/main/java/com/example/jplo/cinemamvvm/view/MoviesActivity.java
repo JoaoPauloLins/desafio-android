@@ -1,15 +1,17 @@
-package com.example.jplo.cinema.movies.view;
+package com.example.jplo.cinemamvvm.view;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.example.jplo.cinema.R;
-import com.example.jplo.cinema.movies.model.Movie;
-import com.example.jplo.cinema.movies.presenter.MoviesPresenter;
-import com.example.jplo.cinema.movies.scope.MoviesActivityScope;
+import com.example.jplo.cinemamvvm.R;
+import com.example.jplo.cinemamvvm.model.Movie;
+import com.example.jplo.cinemamvvm.viewmodel.MoviesViewModel;
 
 import java.util.List;
 
@@ -19,26 +21,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 
-@MoviesActivityScope
 public class MoviesActivity extends AppCompatActivity implements MoviesView {
 
     @BindView(R.id.movies_recycler_view)
     RecyclerView recyclerView;
 
     @Inject
-    MoviesPresenter moviesPresenter;
+    ViewModelProvider.Factory viewModelFactory;
 
-    MoviesAdapter moviesAdapter;
-    EndlessRecyclerViewScrollListener scrollListener;
+    private MoviesAdapter moviesAdapter;
+    private EndlessRecyclerViewScrollListener scrollListener;
+
+    MoviesViewModel moviesViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-        AndroidInjection.inject(this);
         ButterKnife.bind(this);
 
         moviesAdapter = new MoviesAdapter();
+
+        moviesViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(MoviesViewModel.class);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -47,36 +53,32 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page) {
-                moviesPresenter.loadMovies(page);
+                addMovies(page);
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
 
-        moviesPresenter.loadMovies(0);
+        addMovies(0);
     }
 
     @Override
-    public void addMovies(List<Movie> movies) {
-        moviesAdapter.addMovies(movies);
-    }
-
-    @Override
-    public void addLoad(){
+    public void addMovies(int page) {
         moviesAdapter.addLoad();
+        moviesViewModel.getMovies(page)
+                .observe(this, movies -> {
+                    moviesAdapter.removeLoad();
+                    moviesAdapter.addMovies(movies);
+                    scrollListener.setLoaded();
+                });
     }
 
     @Override
-    public void removeLoad(){
-        moviesAdapter.removeLoad();
+    public void movieDetail(View view) {
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        String id = view.getTag().toString();
+        intent.putExtra("key", id);
+        startActivity(intent);
     }
 
-    @Override
-    public void finishLoad(){
-        scrollListener.setLoaded();
-    }
 
-    @Override
-    public void movieDetail(View view){
-        moviesPresenter.showMovieDetail(this, view);
-    }
 }
